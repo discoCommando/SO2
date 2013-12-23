@@ -18,10 +18,10 @@
 CC      = gcc
 CFLAGS  = -Wall -c
 LDFLAGS = -Wall -pthread
-ALL     = server
+ALL     = server client
 OBJECTS = $(addsuffix .o, $(ALL)) err.o
 
-all: $(ALL)
+all: $(ALL) rmKeys
 
 $(ALL): %: %.o err.o
 	$(CC) $(LDFLAGS) $^ -o $@
@@ -29,6 +29,11 @@ $(ALL): %: %.o err.o
 $(OBJECTS): %.o: %.c err.h
 	$(CC) $(CFLAGS) $<
 
+rmKeys:
+	ipcrm -Q 0x0000029a 
+	ipcrm -Q 0x000004d2 
+	ipcrm -Q 0x000004d3
+	ipcrm -Q 0x0000006c
 clean:
 	rm -f $(OBJECTS) $(ALL)
 
